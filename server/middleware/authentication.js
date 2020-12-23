@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const db = require("../models/connection");
 
 module.exports = async (req, res, next) => {
 	const { authorization } = req.headers;
@@ -8,9 +9,9 @@ module.exports = async (req, res, next) => {
 	jwt.verify(token, process.env.SECRET, (err, decoded) => {
 		if (err)
 			return res
-				.status(422)
-				.json({ error: "Failed to authenticate token." });
-		req.decoded = decoded;
+				.status(401)
+				.json({ error: "Failed to authenticate token" });
+		req.user = decoded;
 		next();
 	});
 };

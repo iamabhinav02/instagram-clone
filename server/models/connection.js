@@ -14,5 +14,7 @@ mongoose
 	});
 
 const User = require("./user");
+const Post = require("./posts");
 
 module.exports.User = User;
+module.exports.Post = Post;
