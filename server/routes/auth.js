@@ -1,6 +1,16 @@
 const express = require("express");
-const router = express.Router();
+const jwt = require("jsonwebtoken");
+
 const db = require("../models/connection");
+const authentication = require("../middleware/authentication");
+
+const router = express.Router();
+
+router.get("/protected", authentication, async (req, res) => {
+	const { _id } = req.decoded;
+	const user = await db.User.findById(_id);
+	res.status(200).json({ _id, email: user.email });
+});
 
 router.post("/signup", async (req, res) => {
 	try {
@@ -28,9 +38,12 @@ router.post("/login", async (req, res) => {
 		const { email, password } = req.body;
 		const user = await db.User.findOne({ email });
 		const result = await user.comparePassword(password);
-		if (result)
-			return res.status(200).json({ message: "Logged in successfully" });
-		else throw Error();
+		if (result) {
+			const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+			return res
+				.status(200)
+				.json({ _id: user._id, username: user.email, token });
+		} else throw Error();
 	} catch (err) {
 		res.status(422).json({ message: "Invalid Email/Password" });
 	}
