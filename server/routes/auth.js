@@ -14,21 +14,30 @@ const router = express.Router();
 
 router.post("/signup", async (req, res) => {
 	try {
-		const { name, email, password, username } = req.body;
-		const savedUser = await db.User.findOne({ email });
-		if (savedUser)
+		const { name, email, password, username, repassword } = req.body;
+		const savedUseremail = await db.User.findOne({ email });
+		if (savedUseremail)
 			return res
 				.status(422)
-				.json({ message: "User already exists with this email" });
-		const user = new db.User({ email, name, password, username });
-		const result = await user.save();
-		if (result)
+				.json({ error: "User already exists with this email" });
+		const savedUsername = await db.User.findOne({ username });
+		if (savedUsername)
 			return res
-				.status(201)
-				.json({ message: "You have successfully registered" });
+				.status(422)
+				.json({ error: "User already exists with this username" });
+		if (password === repassword) {
+			const user = new db.User({ email, name, password, username });
+			const result = await user.save();
+			if (result)
+				return res
+					.status(201)
+					.json({ message: "You have successfully registered" });
+		} else {
+			return res.status(422).json({ error: "Passwords do not match" });
+		}
 	} catch (err) {
 		res.status(422).json({
-			message: "Cannot register. Please fill the fields again",
+			error: "Cannot register. Please fill the fields again",
 		});
 	}
 });
@@ -39,16 +48,14 @@ router.post("/login", async (req, res) => {
 		const user = await db.User.findOne({ username });
 		const result = await user.comparePassword(password);
 		if (result) {
-			const token = jwt.sign(
-				{ _id: user._id, username: user.username },
-				process.env.SECRET
-			);
+			const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+			const { _id, name, email, username } = user;
 			return res
 				.status(200)
-				.json({ _id: user._id, username: user.username, token });
+				.json({ token, user: { _id, name, email, username } });
 		} else throw Error();
 	} catch (err) {
-		res.status(422).json({ message: "Invalid Email/Password" });
+		res.status(422).json({ error: "Invalid Email/Password" });
 	}
 });
 

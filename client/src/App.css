@@ -27,16 +27,32 @@ i {
     box-shadow: 0 1px 0 0 rgb(214, 20, 20) !important;
 }
 
+.input-field input[type="email"]:focus {
+    border-bottom: 1px solid rgb(214, 20, 20) !important;
+    box-shadow: 0 1px 0 0 rgb(214, 20, 20) !important;
+}
+
+.input-field input[type="password"]:focus {
+    border-bottom: 1px solid rgb(214, 20, 20) !important;
+    box-shadow: 0 1px 0 0 rgb(214, 20, 20) !important;
+}
+
+.input-field input[type="file"] {
+    border-bottom: 1px solid rgb(214, 20, 20) !important;
+    box-shadow: 0 1px 0 0 rgb(214, 20, 20) !important;
+}
+
 .auth-card {
     display: block;
     padding: 20px;
     text-align: center;
     margin: 40px auto;
     max-width: 400px;
+    height: max-content !important;
 }
 
 .button-margin {
-    margin: 30px auto;
+    margin: 15px auto;
 }
 
 .profile-gallery {

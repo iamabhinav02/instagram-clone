@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const postSchema = new mongoose.Schema({
 	image: {
 		type: String,
-		default: "No photo",
+		required: true,
 	},
 	caption: {
 		type: String,
@@ -11,12 +11,6 @@ const postSchema = new mongoose.Schema({
 	location: {
 		type: String,
 	},
-	tags: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
-		},
-	],
 	created: {
 		type: Date,
 		default: Date.now,

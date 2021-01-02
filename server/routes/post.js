@@ -7,10 +7,11 @@ const router = express.Router();
 
 router.post("/createpost", authentication, async (req, res) => {
 	try {
-		const { image, caption } = req.body;
+		const { image, caption, location } = req.body;
 		const post = new db.Post({
 			image,
 			caption,
+			location,
 			user: req.user,
 		});
 		const saved = await post.save();
