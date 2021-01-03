@@ -25,7 +25,7 @@ router.post("/createpost", authentication, async (req, res) => {
 	}
 });
 
-router.get("/posts", async (req, res) => {
+router.get("/posts", authentication, async (req, res) => {
 	try {
 		const posts = await db.Post.find().populate("user", "_id username");
 		res.status(200).json({ posts });

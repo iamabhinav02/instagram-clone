@@ -1,4 +1,10 @@
-import React, { createContext, Fragment, useEffect, useReducer } from "react";
+import React, {
+	createContext,
+	Fragment,
+	useContext,
+	useEffect,
+	useReducer,
+} from "react";
 import { BrowserRouter, Route, useHistory } from "react-router-dom";
 
 import "./App.css";
@@ -14,10 +20,11 @@ export const UserContext = createContext();
 
 const Routing = () => {
 	const history = useHistory();
+	const { state, dispatch } = useContext(UserContext);
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem("user"));
 		if (user) {
-			history.push("/");
+			dispatch({ type: "USER", payload: user });
 		} else {
 			history.push("/login");
 		}
@@ -45,7 +52,7 @@ const Routing = () => {
 };
 
 const App = () => {
-	const { state, dispatch } = useReducer(reducer, initialState);
+	const [state, dispatch] = useReducer(reducer, initialState);
 
 	return (
 		<UserContext.Provider value={{ state, dispatch }}>
