@@ -54,7 +54,7 @@ const Profile = () => {
 					>
 						<h6>
 							{posts.length}{" "}
-							{posts.length <= 1 ? "post" : "posts"}
+							{posts.length === 1 ? "post" : "posts"}
 						</h6>
 						<h6>40 followers</h6>
 						<h6>40 following</h6>

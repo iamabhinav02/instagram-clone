@@ -49,4 +49,36 @@ router.get("/post", authentication, async (req, res) => {
 	}
 });
 
+router.put("/like", authentication, (req, res) => {
+	db.Post.findByIdAndUpdate(
+		{ _id: req.body.postId },
+		{
+			$push: { likes: req.user._id },
+		},
+		{ new: true }
+	).exec((err, result) => {
+		if (err) {
+			return res.status(422).json({ error: err });
+		} else {
+			return res.status(200).json(result);
+		}
+	});
+});
+
+router.put("/unlike", authentication, (req, res) => {
+	db.Post.findByIdAndUpdate(
+		{ _id: req.body.postId },
+		{
+			$pull: { likes: req.user._id },
+		},
+		{ new: true }
+	).exec((err, result) => {
+		if (err) {
+			return res.status(422).json({ error: err });
+		} else {
+			return res.status(200).json(result);
+		}
+	});
+});
+
 module.exports = router;
