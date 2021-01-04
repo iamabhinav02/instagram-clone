@@ -85,12 +85,70 @@ const Home = () => {
 		}
 	};
 
+	const deletePost = async postId => {
+		try {
+			let fetched = await fetch(`/delete/${postId}`, {
+				method: "delete",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+				},
+			});
+			fetched = await fetched.json();
+			const newData = data.filter(item => {
+				return item._id !== fetched._id;
+			});
+			setData(newData);
+		} catch (err) {
+			console.log(err.message);
+		}
+	};
+
+	const deleteComment = async (postId, commentId) => {
+		try {
+			let fetched = await fetch(
+				`/delete/comment/${postId}/${commentId}`,
+				{
+					method: "delete",
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+					},
+				}
+			);
+			const result = await fetched.json();
+			const newData = data.map(item => {
+				if (item._id === result._id) return result;
+				else return item;
+			});
+			setData(newData);
+		} catch (err) {
+			console.log(err.message);
+		}
+	};
+
 	return (
 		<div className="home">
 			{data.map(item => {
 				return (
 					<div className="card home-card" key={item._id}>
-						<h5>{item.user.username}</h5>
+						<h5>
+							{item.user.username}
+							{item.user._id === state._id && (
+								<i
+									className="material-icons"
+									style={{
+										color: "black",
+										float: "right",
+										cursor: "pointer",
+										margin: "10px",
+									}}
+									onClick={() => {
+										deletePost(item._id);
+									}}
+								>
+									delete
+								</i>
+							)}
+						</h5>
 						<span>{item.location}</span>
 						<div className="card-image">
 							<img src={item.image} alt={item.caption} />
@@ -108,6 +166,7 @@ const Home = () => {
 									style={{
 										color: "black",
 										marginLeft: "5px",
+										cursor: "pointer",
 									}}
 									onClick={() => {
 										unlikePost(item._id);
@@ -121,6 +180,7 @@ const Home = () => {
 									style={{
 										color: "black",
 										marginLeft: "5px",
+										cursor: "pointer",
 									}}
 									onClick={() => {
 										likePost(item._id);
@@ -149,7 +209,29 @@ const Home = () => {
 										>
 											{records.user.username}
 										</span>{" "}
-										{records.text}
+										<span style={{ float: "right" }}>
+											{records.user._id === state._id && (
+												<i
+													className="material-icons"
+													style={{
+														color: "black",
+														cursor: "pointer",
+														fontSize: "1.3rem",
+													}}
+													onClick={() => {
+														deleteComment(
+															item._id,
+															records._id
+														);
+													}}
+												>
+													delete
+												</i>
+											)}
+										</span>
+										<span style={{ textAlign: "justify" }}>
+											{records.text}
+										</span>
 									</h6>
 								);
 							})}

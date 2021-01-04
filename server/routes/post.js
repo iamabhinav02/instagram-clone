@@ -97,11 +97,64 @@ router.put("/comment", authentication, (req, res) => {
 		{ new: true }
 	)
 		.populate("comments.user", "_id username")
+		.populate("user", "_id username")
 		.exec((err, result) => {
 			if (err) {
 				return res.status(422).json({ error: err });
 			} else {
 				return res.status(200).json(result);
+			}
+		});
+});
+
+router.delete(
+	"/delete/comment/:postId/:commentId",
+	authentication,
+	(req, res) => {
+		db.Post.findByIdAndUpdate(
+			{
+				_id: req.params.postId,
+			},
+			{
+				$pull: {
+					comments: {
+						_id: req.params.commentId,
+					},
+				},
+			},
+			{ new: true }
+		)
+			.populate("user", "_id username")
+			.populate("comments.user", "_id username")
+			.exec((err, post) => {
+				if (err)
+					return res
+						.status(422)
+						.json({ error: "Comment could not be deleted" });
+				return res.status(200).json(post);
+			});
+	}
+);
+
+router.delete("/delete/:postId", authentication, (req, res) => {
+	db.Post.findOne({
+		_id: req.params.postId,
+	})
+		.populate("user", "_id")
+		.exec(async (err, post) => {
+			if (err)
+				return res
+					.status(422)
+					.json({ error: "Post could not be deleted" });
+			if (post.user._id.toString() === req.user._id.toString()) {
+				const result = await post.remove();
+				if (result) {
+					return res.status(200).json(result);
+				} else {
+					return res
+						.status(422)
+						.json({ error: "Post could not be deleted" });
+				}
 			}
 		});
 });
