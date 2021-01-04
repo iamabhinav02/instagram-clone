@@ -27,7 +27,9 @@ router.post("/createpost", authentication, async (req, res) => {
 
 router.get("/posts", authentication, async (req, res) => {
 	try {
-		const posts = await db.Post.find().populate("user", "_id username");
+		const posts = await db.Post.find()
+			.populate("user", "_id username")
+			.populate("comments.user", "_id username");
 		res.status(200).json({ posts });
 	} catch (error) {
 		res.status(401).json({
@@ -79,6 +81,29 @@ router.put("/unlike", authentication, (req, res) => {
 			return res.status(200).json(result);
 		}
 	});
+});
+
+router.put("/comment", authentication, (req, res) => {
+	if (!req.body.text) return null;
+	const comment = {
+		text: req.body.text,
+		user: req.user._id,
+	};
+	db.Post.findByIdAndUpdate(
+		{ _id: req.body.postId },
+		{
+			$push: { comments: comment },
+		},
+		{ new: true }
+	)
+		.populate("comments.user", "_id username")
+		.exec((err, result) => {
+			if (err) {
+				return res.status(422).json({ error: err });
+			} else {
+				return res.status(200).json(result);
+			}
+		});
 });
 
 module.exports = router;

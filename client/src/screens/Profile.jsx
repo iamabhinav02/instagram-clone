@@ -3,8 +3,8 @@ import { UserContext } from "../App";
 
 const Profile = () => {
 	const [posts, setPosts] = useState([]);
-	const { state, dispatch } = useContext(UserContext);
-	console.log(state);
+	const { state } = useContext(UserContext);
+
 	useEffect(async () => {
 		const fetched = await fetch("/post", {
 			headers: {
@@ -36,6 +36,7 @@ const Profile = () => {
 							borderRadius: "50%",
 						}}
 						src="https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
+						alt="Profile"
 					/>
 				</div>
 				<div style={{ textAlign: "left" }}>

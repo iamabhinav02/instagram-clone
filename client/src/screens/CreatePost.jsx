@@ -11,7 +11,7 @@ const CreatePost = () => {
 	useEffect(async () => {
 		try {
 			if (url) {
-				let fetchedData = await fetch("/createpost", {
+				let fetchedData = fetch("/createpost", {
 					method: "post",
 					headers: {
 						"Content-Type": "application/json",

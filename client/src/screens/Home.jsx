@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
 
 const Home = () => {
-	const { state, dispatch } = useContext(UserContext);
+	const { state } = useContext(UserContext);
 	const [data, setData] = useState([]);
 
 	useEffect(async () => {
@@ -13,7 +13,6 @@ const Home = () => {
 		});
 		fetched = await fetched.json();
 		setData(fetched.posts);
-		console.log(fetched);
 	}, []);
 
 	const likePost = async postId => {
@@ -62,15 +61,39 @@ const Home = () => {
 		}
 	};
 
+	const addComment = async (text, postId) => {
+		try {
+			let fetched = await fetch("/comment", {
+				method: "put",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+				},
+				body: JSON.stringify({
+					postId,
+					text,
+				}),
+			});
+			fetched = await fetched.json();
+			const newData = data.map(item => {
+				if (item._id === fetched._id) return fetched;
+				else return item;
+			});
+			setData(newData);
+		} catch (err) {
+			return err;
+		}
+	};
+
 	return (
 		<div className="home">
 			{data.map(item => {
 				return (
 					<div className="card home-card" key={item._id}>
 						<h5>{item.user.username}</h5>
-						<h7>{item.location}</h7>
+						<span>{item.location}</span>
 						<div className="card-image">
-							<img src={item.image} />
+							<img src={item.image} alt={item.caption} />
 						</div>
 						<div className="card-content">
 							<i
@@ -111,8 +134,38 @@ const Home = () => {
 								{item.likes.length === 1 ? "like" : "likes"}
 							</h6>
 							<h5>{item.caption}</h5>
-							<h7>{item.created}</h7>
-							<input type="text" placeholder="Add a comment.." />
+							{item.comments.map(records => {
+								return (
+									<h6
+										style={{
+											textAlign: "left",
+										}}
+										key={records._id}
+									>
+										<span
+											style={{
+												fontWeight: "500",
+											}}
+										>
+											{records.user.username}
+										</span>{" "}
+										{records.text}
+									</h6>
+								);
+							})}
+							<form
+								onSubmit={e => {
+									e.preventDefault();
+									addComment(e.target[0].value, item._id);
+									e.target[0].value = "";
+								}}
+							>
+								<input
+									type="text"
+									placeholder="Add a comment.."
+								/>
+							</form>
+							<span>{item.created}</span>
 						</div>
 					</div>
 				);

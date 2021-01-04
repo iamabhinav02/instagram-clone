@@ -8,13 +8,13 @@ const NavBar = () => {
 	const RenderList = () => {
 		if (state) {
 			return [
-				<li>
+				<li key="Profile">
 					<Link to="/profile">Profile</Link>
 				</li>,
-				<li>
+				<li key="Create Post">
 					<Link to="/createpost">Create Post</Link>
 				</li>,
-				<li>
+				<li key="Logout">
 					<button
 						className="btn #c62828 red darken-3 button-margin"
 						onClick={() => {
@@ -29,10 +29,10 @@ const NavBar = () => {
 			];
 		} else {
 			return [
-				<li>
+				<li key="Login">
 					<Link to="/login">Login</Link>
 				</li>,
-				<li>
+				<li key="Signup">
 					<Link to="/signup">Signup</Link>
 				</li>,
 			];

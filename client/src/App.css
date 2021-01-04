@@ -69,4 +69,5 @@ i {
     max-width: 550px;
     margin: 30px auto;
     height: max-content;
+    word-break: break-all;
 }
