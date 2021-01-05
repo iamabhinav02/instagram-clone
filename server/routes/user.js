@@ -5,22 +5,23 @@ const authentication = require("../middleware/authentication");
 
 const router = express.Router();
 
-router.get("/user/:id", authentication, async (req, res) => {
-	try {
-		const user = await db.User.findOne({ _id: req.params.id }).select(
-			"-password"
-		);
-		const userPosts = await db.Post.find({ user: req.params.id }).populate(
-			"user",
-			"_id username"
-		);
-		userPosts.exec((error, posts) => {
-			if (error) throw Error("Selected user posts not found");
-			return res.status(200).json({ user, posts });
+router.get("/user/:id", authentication, (req, res) => {
+	db.User.findOne({ _id: req.params.id })
+		.select("-password")
+		.then(user => {
+			db.Post.find({ user: req.params.id })
+				.populate("user", "_id username")
+				.exec((error, posts) => {
+					if (error)
+						return res
+							.status(404)
+							.json({ error: "Selected user posts not found" });
+					if (posts) return res.status(200).json({ user, posts });
+				});
+		})
+		.catch(() => {
+			return res.status(404).json({ error: "User not found" });
 		});
-	} catch (err) {
-		return res.status(404).json({ error: err });
-	}
 });
 
 module.exports = router;

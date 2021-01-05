@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
+import { Link } from "react-router-dom";
 
 const Home = () => {
 	const { state } = useContext(UserContext);
@@ -131,7 +132,15 @@ const Home = () => {
 				return (
 					<div className="card home-card" key={item._id}>
 						<h5>
-							{item.user.username}
+							<Link
+								to={
+									item.user._id !== state._id
+										? `/profile/${item.user._id}`
+										: `/profile`
+								}
+							>
+								{item.user.username}
+							</Link>
 							{item.user._id === state._id && (
 								<i
 									className="material-icons"

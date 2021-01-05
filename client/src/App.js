@@ -14,6 +14,7 @@ import Profile from "./screens/Profile";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import CreatePost from "./screens/CreatePost";
+import UserProfile from "./screens/UserProfile";
 import { initialState, reducer } from "./store/reducer/userReducer";
 
 export const UserContext = createContext();
@@ -38,6 +39,9 @@ const Routing = () => {
 			</Route>
 			<Route exact path="/profile">
 				<Profile />
+			</Route>
+			<Route exact path="/profile/:userId">
+				<UserProfile />
 			</Route>
 			<Route exact path="/login">
 				<Login />
