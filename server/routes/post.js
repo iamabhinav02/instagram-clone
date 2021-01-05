@@ -111,14 +111,15 @@ router.delete(
 	"/delete/comment/:postId/:commentId",
 	authentication,
 	(req, res) => {
+		const { postId, commentId } = req.params;
 		db.Post.findByIdAndUpdate(
 			{
-				_id: req.params.postId,
+				_id: postId,
 			},
 			{
 				$pull: {
 					comments: {
-						_id: req.params.commentId,
+						_id: commentId,
 					},
 				},
 			},

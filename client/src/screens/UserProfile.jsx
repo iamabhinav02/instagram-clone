@@ -4,7 +4,8 @@ import { UserContext } from "../App";
 
 const UserProfile = () => {
 	const [userProfile, setProfile] = useState(null);
-	const { state } = useContext(UserContext);
+	const [showFollow, setShowFollow] = useState(true);
+	const { state, dispatch } = useContext(UserContext);
 	const { userId } = useParams();
 
 	useEffect(async () => {
@@ -15,8 +16,82 @@ const UserProfile = () => {
 		});
 		const data = await fetched.json();
 		setProfile(data);
-		// console.log(data);
 	}, []);
+
+	const followUser = async () => {
+		try {
+			let fetched = await fetch("/follow", {
+				method: "put",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+				},
+				body: JSON.stringify({
+					followId: userId,
+				}),
+			});
+			fetched = await fetched.json();
+			dispatch({
+				type: "UPDATE",
+				payload: {
+					following: fetched.following,
+					followers: fetched.followers,
+				},
+			});
+			localStorage.setItem("user", JSON.stringify(fetched));
+			setProfile(prevRecord => {
+				return {
+					...prevRecord,
+					user: {
+						...prevRecord.user,
+						followers: [...prevRecord.user.followers, fetched._id],
+					},
+				};
+			});
+			setShowFollow(false);
+		} catch (err) {
+			console.log(err.message);
+		}
+	};
+
+	const unfollowUser = async () => {
+		try {
+			let fetched = await fetch("/unfollow", {
+				method: "put",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+				},
+				body: JSON.stringify({
+					unfollowId: userId,
+				}),
+			});
+			fetched = await fetched.json();
+			dispatch({
+				type: "UPDATE",
+				payload: {
+					following: fetched.following,
+					followers: fetched.followers,
+				},
+			});
+			localStorage.setItem("user", JSON.stringify(fetched));
+			setProfile(prevRecord => {
+				const newData = prevRecord.user.followers.filter(
+					item => item !== fetched._id
+				);
+				return {
+					...prevRecord,
+					user: {
+						...prevRecord.user,
+						followers: newData,
+					},
+				};
+			});
+			setShowFollow(true);
+		} catch (err) {
+			console.log(err.message);
+		}
+	};
 
 	return (
 		<>
@@ -70,9 +145,32 @@ const UserProfile = () => {
 										? "post"
 										: "posts"}
 								</h6>
-								<h6>40 followers</h6>
-								<h6>40 following</h6>
+								<h6>
+									{userProfile.user.followers.length}{" "}
+									{userProfile.user.followers.length === 1
+										? "follower"
+										: "followers"}
+								</h6>
+								<h6>
+									{userProfile.user.following.length}{" "}
+									following
+								</h6>
 							</div>
+							{showFollow ? (
+								<button
+									className="btn waves-effect waves-light #ef5350 red lighten-1 button-margin"
+									onClick={followUser}
+								>
+									Follow
+								</button>
+							) : (
+								<button
+									className="btn waves-effect waves-light #ef5350 red lighten-1 button-margin"
+									onClick={unfollowUser}
+								>
+									Unfollow
+								</button>
+							)}
 						</div>
 					</div>
 					<div className="profile-gallery">

@@ -24,4 +24,76 @@ router.get("/user/:id", authentication, (req, res) => {
 		});
 });
 
+router.put("/follow", authentication, async (req, res) => {
+	try {
+		const follower = await db.User.findByIdAndUpdate(
+			{
+				_id: req.body.followId,
+			},
+			{
+				$push: {
+					followers: req.user._id,
+				},
+			},
+			{ new: true }
+		).select("-password");
+
+		if (!follower) throw Error("Could not follow the user");
+
+		const following = await db.User.findByIdAndUpdate(
+			{
+				_id: req.user._id,
+			},
+			{
+				$push: {
+					following: req.body.followId,
+				},
+			},
+			{ new: true }
+		).select("-password");
+
+		if (!following) throw Error("Following not working");
+
+		return res.status(200).json(following);
+	} catch (err) {
+		return res.status(422).json({ error: err.message });
+	}
+});
+
+router.put("/unfollow", authentication, async (req, res) => {
+	try {
+		const unfollower = await db.User.findByIdAndUpdate(
+			{
+				_id: req.body.unfollowId,
+			},
+			{
+				$pull: {
+					followers: req.user._id,
+				},
+			},
+			{ new: true }
+		).select("-password");
+
+		if (!unfollower) throw Error("Could not unfollow the user");
+
+		const unfollowing = await db.User.findByIdAndUpdate(
+			{
+				_id: req.user._id,
+			},
+			{
+				$pull: {
+					following: req.body.unfollowId,
+				},
+			},
+			{ new: true }
+		).select("-password");
+
+		if (!unfollowing) throw Error("Unfollowing not working");
+
+		return res.status(200).json(unfollowing);
+	} catch (err) {
+		return res.status(422).json({ error: err.message });
+	}
+});
+
 module.exports = router;

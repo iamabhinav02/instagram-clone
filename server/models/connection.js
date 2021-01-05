@@ -5,6 +5,7 @@ mongoose
 		useUnifiedTopology: true,
 		useNewUrlParser: true,
 		useCreateIndex: true,
+		useFindAndModify: false,
 	})
 	.then(() => {
 		console.log("Connection to database successful!!");

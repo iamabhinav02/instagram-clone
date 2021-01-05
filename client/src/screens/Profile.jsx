@@ -57,8 +57,13 @@ const Profile = () => {
 							{posts.length}{" "}
 							{posts.length === 1 ? "post" : "posts"}
 						</h6>
-						<h6>40 followers</h6>
-						<h6>40 following</h6>
+						<h6>
+							{state.followers.length}{" "}
+							{state.followers.length === 1
+								? "follower"
+								: "followers"}
+						</h6>
+						<h6>{state.following.length} following</h6>
 					</div>
 				</div>
 			</div>
