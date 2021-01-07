@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../App";
+import M from "materialize-css";
 
 const Profile = () => {
 	const [posts, setPosts] = useState([]);
-	const { state } = useContext(UserContext);
+	const { state, dispatch } = useContext(UserContext);
+	const [image, setImage] = useState("");
 
 	useEffect(async () => {
 		const fetched = await fetch("/userprofile", {
@@ -12,11 +14,66 @@ const Profile = () => {
 			},
 		});
 		const data = await fetched.json();
-		console.log(data);
 		setPosts(data.posts);
 	}, []);
 
-	const UploadPhoto = async () => {};
+	useEffect(async () => {
+		try {
+			if (image) {
+				let data = new FormData();
+				data.append("file", image);
+				data.append("upload_preset", "instagram-clone");
+				data.append("cloud_name", "profhub");
+
+				let fetchedData = await fetch(
+					"https://api.cloudinary.com/v1_1/profhub/image/upload",
+					{
+						method: "post",
+						body: data,
+					}
+				);
+
+				fetchedData = await fetchedData.json();
+
+				let fetchedPhoto = await fetch("/updatephoto", {
+					method: "put",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+					},
+					body: JSON.stringify({
+						url: fetchedData.url,
+					}),
+				});
+				fetchedPhoto = await fetchedPhoto.json();
+				localStorage.setItem(
+					"user",
+					JSON.stringify({
+						...state,
+						photo: fetchedPhoto.photo.photo,
+					})
+				);
+				dispatch({
+					type: "UPDATE PHOTO",
+					payload: fetchedPhoto.photo.photo,
+				});
+
+				M.toast({
+					html: "Updated photo",
+					classes: "#43a047 green darken-1",
+				});
+			}
+		} catch (err) {
+			M.toast({
+				html: "Could not update photo",
+				classes: "#c62828 red darken-3",
+			});
+		}
+	}, [image]);
+
+	const updatePhoto = file => {
+		setImage(file);
+	};
 
 	return (
 		<div style={{ maxWidth: "768px", margin: "0px auto" }}>
@@ -40,9 +97,23 @@ const Profile = () => {
 						src={state ? state.photo : "loading"}
 						alt="Profile"
 					/>
-					<div className="file-field btn button-margin">
-						<span>Upload Photo</span>
-						<input type="file" onChange={UploadPhoto} />
+					<div className="file-field">
+						<div className="btn button-margin">
+							<span>Update</span>
+							<input
+								type="file"
+								onChange={e => {
+									updatePhoto(e.target.files[0]);
+								}}
+							/>
+						</div>
+						<div className="file-path-wrapper input-field">
+							<input
+								className="file-path validate"
+								type="text"
+								placeholder="Upload an image"
+							/>
+						</div>
 					</div>
 				</div>
 				<div style={{ textAlign: "left", margin: "25px 0px 0px 0px" }}>
@@ -64,16 +135,15 @@ const Profile = () => {
 							{posts.length === 1 ? "post" : "posts"}
 						</h6>
 						<h6>
-							{state.followers ? state.followers.length : "0"}{" "}
-							{state.followers
+							{state ? state.followers.length : "0"}{" "}
+							{state
 								? state.followers.length === 1
 									? "follower"
 									: "followers"
 								: "followers"}
 						</h6>
 						<h6>
-							{state.following ? state.following.length : "0"}{" "}
-							following
+							{state ? state.following.length : "0"} following
 						</h6>
 					</div>
 				</div>

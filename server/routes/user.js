@@ -96,4 +96,20 @@ router.put("/unfollow", authentication, async (req, res) => {
 	}
 });
 
+router.put("/updatephoto", authentication, async (req, res) => {
+	try {
+		const photo = await db.User.findByIdAndUpdate(
+			req.user._id,
+			{
+				$set: { photo: req.body.url },
+			},
+			{ new: true }
+		);
+		if (!photo) throw Error("Could not update photo");
+		return res.status(200).json({ photo });
+	} catch (err) {
+		return res.status(422).json({ error: err.message });
+	}
+});
+
 module.exports = router;
