@@ -1,5 +1,5 @@
 # instagram-clone
-#### (an ongoing project)
+#### (an ongoing project, still working on some more functionality of the app)
 
 An attempt to make a clone of Instagram with all the functionality of Instagram (obviously not all 😅) created from scratch using MERN tech stack.
 
