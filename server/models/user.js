@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
 			ref: "User",
 		},
 	],
+	photo: {
+		type: String,
+		default:
+			"https://res.cloudinary.com/profhub/image/upload/c_scale,h_180,w_180/v1610009101/no-profile_xd3hfl.png",
+	},
 });
 
 userSchema.pre("save", async function (next) {

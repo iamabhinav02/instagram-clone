@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const db = require("../models/connection");
 
 module.exports = (req, res, next) => {
 	const { authorization } = req.headers;
@@ -10,7 +11,10 @@ module.exports = (req, res, next) => {
 			return res
 				.status(401)
 				.json({ error: "Failed to authenticate token" });
-		req.user = decoded;
-		next();
+		const { _id } = decoded;
+		db.User.findById(_id).then(userData => {
+			req.user = userData;
+			next();
+		});
 	});
 };

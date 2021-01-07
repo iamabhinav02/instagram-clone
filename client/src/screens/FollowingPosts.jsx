@@ -2,17 +2,18 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const FollowingPosts = () => {
 	const { state } = useContext(UserContext);
 	const [data, setData] = useState([]);
 
 	useEffect(async () => {
-		let fetched = await fetch("/posts", {
+		let fetched = await fetch("/getfollowingpost", {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("jwt")}`,
 			},
 		});
 		fetched = await fetched.json();
+
 		setData(fetched.posts);
 	}, []);
 
@@ -266,4 +267,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default FollowingPosts;

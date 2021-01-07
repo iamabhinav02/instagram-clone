@@ -11,7 +11,7 @@ const CreatePost = () => {
 	useEffect(async () => {
 		try {
 			if (url) {
-				let fetchedData = fetch("/createpost", {
+				let fetchedData = await fetch("/createpost", {
 					method: "post",
 					headers: {
 						"Content-Type": "application/json",
@@ -24,7 +24,7 @@ const CreatePost = () => {
 					}),
 				});
 				let data = await fetchedData.json();
-				if (data.error) {
+				if (!data) {
 					throw new Error(data.error);
 				} else {
 					M.toast({
@@ -35,7 +35,11 @@ const CreatePost = () => {
 				}
 			}
 		} catch (err) {
-			M.toast({ html: err.message, classes: "#c62828 red darken-3" });
+			console.log(err.message);
+			M.toast({
+				html: "Post could not be uploaded",
+				classes: "#c62828 red darken-3",
+			});
 		}
 	}, [url]);
 
@@ -52,11 +56,14 @@ const CreatePost = () => {
 					body: data,
 				}
 			);
-
 			let fetchedDataJson = await fetchedData.json();
 			setUrl(fetchedDataJson.url);
 		} catch (err) {
-			M.toast({ html: err.message, classes: "#c62828 red darken-3" });
+			console.log(err.message);
+			M.toast({
+				html: "Post could not be uploaded",
+				classes: "#c62828 red darken-3",
+			});
 		}
 	};
 

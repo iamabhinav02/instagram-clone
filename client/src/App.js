@@ -15,6 +15,8 @@ import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import CreatePost from "./screens/CreatePost";
 import UserProfile from "./screens/UserProfile";
+import FollowingPosts from "./screens/FollowingPosts";
+
 import { initialState, reducer } from "./store/reducer/userReducer";
 
 export const UserContext = createContext();
@@ -36,6 +38,9 @@ const Routing = () => {
 		<Fragment>
 			<Route exact path="/">
 				<Home />
+			</Route>
+			<Route exact path="/following">
+				<FollowingPosts />
 			</Route>
 			<Route exact path="/profile">
 				<Profile />

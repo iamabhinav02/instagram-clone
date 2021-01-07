@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post("/signup", async (req, res) => {
 	try {
-		const { name, email, password, username, repassword } = req.body;
+		const { name, email, password, username, repassword, photo } = req.body;
 		const savedUseremail = await db.User.findOne({ email });
 		if (savedUseremail)
 			return res
@@ -26,7 +26,13 @@ router.post("/signup", async (req, res) => {
 				.status(422)
 				.json({ error: "User already exists with this username" });
 		if (password === repassword) {
-			const user = new db.User({ email, name, password, username });
+			const user = new db.User({
+				email,
+				name,
+				password,
+				username,
+				photo,
+			});
 			const result = await user.save();
 			if (result)
 				return res
@@ -49,10 +55,27 @@ router.post("/login", async (req, res) => {
 		const result = await user.comparePassword(password);
 		if (result) {
 			const token = jwt.sign({ _id: user._id }, process.env.SECRET);
-			const { _id, name, email, username } = user;
-			return res
-				.status(200)
-				.json({ token, user: { _id, name, email, username } });
+			const {
+				_id,
+				name,
+				email,
+				username,
+				followers,
+				following,
+				photo,
+			} = user;
+			return res.status(200).json({
+				token,
+				user: {
+					_id,
+					name,
+					email,
+					username,
+					followers,
+					following,
+					photo,
+				},
+			});
 		} else throw Error();
 	} catch (err) {
 		res.status(422).json({ error: "Invalid Email/Password" });

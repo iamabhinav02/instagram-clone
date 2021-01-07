@@ -4,9 +4,11 @@ import { UserContext } from "../App";
 
 const UserProfile = () => {
 	const [userProfile, setProfile] = useState(null);
-	const [showFollow, setShowFollow] = useState(true);
 	const { state, dispatch } = useContext(UserContext);
 	const { userId } = useParams();
+	const [showFollow, setShowFollow] = useState(
+		state ? !state.following.includes(userId) : true
+	);
 
 	useEffect(async () => {
 		const fetched = await fetch(`/user/${userId}`, {
@@ -114,7 +116,7 @@ const UserProfile = () => {
 									height: "180px",
 									borderRadius: "50%",
 								}}
-								src="https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
+								src={userProfile.user.photo}
 								alt="Profile"
 							/>
 						</div>

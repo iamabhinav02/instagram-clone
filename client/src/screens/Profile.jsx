@@ -6,15 +6,17 @@ const Profile = () => {
 	const { state } = useContext(UserContext);
 
 	useEffect(async () => {
-		const fetched = await fetch("/post", {
+		const fetched = await fetch("/userprofile", {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("jwt")}`,
 			},
 		});
 		const data = await fetched.json();
+		console.log(data);
 		setPosts(data.posts);
-		console.log(posts);
 	}, []);
+
+	const UploadPhoto = async () => {};
 
 	return (
 		<div style={{ maxWidth: "768px", margin: "0px auto" }}>
@@ -28,18 +30,22 @@ const Profile = () => {
 					padding: "0px 0px 5px 0px",
 				}}
 			>
-				<div>
+				<div style={{ display: "inline-grid" }}>
 					<img
 						style={{
 							width: "180px",
 							height: "180px",
 							borderRadius: "50%",
 						}}
-						src="https://images.unsplash.com/photo-1508674861872-a51e06c50c9b?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
+						src={state ? state.photo : "loading"}
 						alt="Profile"
 					/>
+					<div className="file-field btn button-margin">
+						<span>Upload Photo</span>
+						<input type="file" onChange={UploadPhoto} />
+					</div>
 				</div>
-				<div style={{ textAlign: "left" }}>
+				<div style={{ textAlign: "left", margin: "25px 0px 0px 0px" }}>
 					<h3>{state ? state.name : "Loading..."}</h3>
 					<h5>
 						<i style={{ color: "black" }}>
@@ -58,12 +64,17 @@ const Profile = () => {
 							{posts.length === 1 ? "post" : "posts"}
 						</h6>
 						<h6>
-							{state.followers.length}{" "}
-							{state.followers.length === 1
-								? "follower"
+							{state.followers ? state.followers.length : "0"}{" "}
+							{state.followers
+								? state.followers.length === 1
+									? "follower"
+									: "followers"
 								: "followers"}
 						</h6>
-						<h6>{state.following.length} following</h6>
+						<h6>
+							{state.following ? state.following.length : "0"}{" "}
+							following
+						</h6>
 					</div>
 				</div>
 			</div>

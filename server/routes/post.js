@@ -38,7 +38,20 @@ router.get("/posts", authentication, async (req, res) => {
 	}
 });
 
-router.get("/post", authentication, async (req, res) => {
+router.get("/getfollowingpost", authentication, async (req, res) => {
+	try {
+		const posts = await db.Post.find({ user: { $in: req.user.following } })
+			.populate("user", "_id username")
+			.populate("comments.user", "_id username");
+		res.status(200).json({ posts });
+	} catch (error) {
+		res.status(401).json({
+			error: "Could not load the posts. Try again!!",
+		});
+	}
+});
+
+router.get("/userprofile", authentication, async (req, res) => {
 	try {
 		const { _id } = req.user;
 		const posts = await db.Post.find({ user: _id }).populate(
@@ -58,13 +71,16 @@ router.put("/like", authentication, (req, res) => {
 			$push: { likes: req.user._id },
 		},
 		{ new: true }
-	).exec((err, result) => {
-		if (err) {
-			return res.status(422).json({ error: err });
-		} else {
-			return res.status(200).json(result);
-		}
-	});
+	)
+		.populate("user", "_id username")
+		.populate("comments.user", "_id username")
+		.exec((err, result) => {
+			if (err) {
+				return res.status(422).json({ error: err });
+			} else {
+				return res.status(200).json(result);
+			}
+		});
 });
 
 router.put("/unlike", authentication, (req, res) => {
@@ -74,13 +90,16 @@ router.put("/unlike", authentication, (req, res) => {
 			$pull: { likes: req.user._id },
 		},
 		{ new: true }
-	).exec((err, result) => {
-		if (err) {
-			return res.status(422).json({ error: err });
-		} else {
-			return res.status(200).json(result);
-		}
-	});
+	)
+		.populate("user", "_id username")
+		.populate("comments.user", "_id username")
+		.exec((err, result) => {
+			if (err) {
+				return res.status(422).json({ error: err });
+			} else {
+				return res.status(200).json(result);
+			}
+		});
 });
 
 router.put("/comment", authentication, (req, res) => {
@@ -107,35 +126,31 @@ router.put("/comment", authentication, (req, res) => {
 		});
 });
 
-router.delete(
-	"/delete/comment/:postId/:commentId",
-	authentication,
-	(req, res) => {
-		const { postId, commentId } = req.params;
-		db.Post.findByIdAndUpdate(
-			{
-				_id: postId,
-			},
-			{
-				$pull: {
-					comments: {
-						_id: commentId,
-					},
+router.put("/delete/comment/:postId", authentication, (req, res) => {
+	const { postId } = req.params;
+	db.Post.findByIdAndUpdate(
+		{
+			_id: postId,
+		},
+		{
+			$pull: {
+				comments: {
+					_id: req.body.commentId,
 				},
 			},
-			{ new: true }
-		)
-			.populate("user", "_id username")
-			.populate("comments.user", "_id username")
-			.exec((err, post) => {
-				if (err)
-					return res
-						.status(422)
-						.json({ error: "Comment could not be deleted" });
-				return res.status(200).json(post);
-			});
-	}
-);
+		},
+		{ new: true }
+	)
+		.populate("user", "_id username")
+		.populate("comments.user", "_id username")
+		.exec((err, post) => {
+			if (err)
+				return res
+					.status(422)
+					.json({ error: "Comment could not be deleted" });
+			return res.status(200).json(post);
+		});
+});
 
 router.delete("/delete/:postId", authentication, (req, res) => {
 	db.Post.findOne({

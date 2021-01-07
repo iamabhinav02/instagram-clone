@@ -14,6 +14,9 @@ const NavBar = () => {
 				<li key="Create Post">
 					<Link to="/createpost">Create Post</Link>
 				</li>,
+				<li key="My Following">
+					<Link to="/following">My Following</Link>
+				</li>,
 				<li key="Logout">
 					<button
 						className="btn #c62828 red darken-3 button-margin"
