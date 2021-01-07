@@ -45,4 +45,5 @@ npm start
 Will soon host the running application on any cloud service provider like Herokuapp.
 
 Do let me know how you liked the application 🚀🚀
-Cheers 🤜🤛
+
+Cheers 🕺
