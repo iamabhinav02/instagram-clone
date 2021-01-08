@@ -42,6 +42,18 @@ i {
     box-shadow: 0 1px 0 0 rgb(214, 20, 20) !important;
 }
 
+.row {
+    margin-bottom: 5px !important;
+}
+
+p {
+    display: block !important;
+    margin-block-start: 0em !important;
+    margin-block-end: 5px !important;
+    margin-inline-start: 4px !important;
+    margin-inline-end: 0px !important;
+}
+
 .auth-card {
     display: block;
     padding: 20px;

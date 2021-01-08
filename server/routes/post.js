@@ -28,7 +28,7 @@ router.post("/createpost", authentication, async (req, res) => {
 router.get("/posts", authentication, async (req, res) => {
 	try {
 		const posts = await db.Post.find()
-			.populate("user", "_id username")
+			.populate("user", "_id username photo")
 			.populate("comments.user", "_id username");
 		res.status(200).json({ posts });
 	} catch (error) {
@@ -41,7 +41,7 @@ router.get("/posts", authentication, async (req, res) => {
 router.get("/getfollowingpost", authentication, async (req, res) => {
 	try {
 		const posts = await db.Post.find({ user: { $in: req.user.following } })
-			.populate("user", "_id username")
+			.populate("user", "_id username photo")
 			.populate("comments.user", "_id username");
 		res.status(200).json({ posts });
 	} catch (error) {
@@ -72,7 +72,7 @@ router.put("/like", authentication, (req, res) => {
 		},
 		{ new: true }
 	)
-		.populate("user", "_id username")
+		.populate("user", "_id username photo")
 		.populate("comments.user", "_id username")
 		.exec((err, result) => {
 			if (err) {
@@ -91,7 +91,7 @@ router.put("/unlike", authentication, (req, res) => {
 		},
 		{ new: true }
 	)
-		.populate("user", "_id username")
+		.populate("user", "_id username photo")
 		.populate("comments.user", "_id username")
 		.exec((err, result) => {
 			if (err) {
@@ -116,7 +116,7 @@ router.put("/comment", authentication, (req, res) => {
 		{ new: true }
 	)
 		.populate("comments.user", "_id username")
-		.populate("user", "_id username")
+		.populate("user", "_id username photo")
 		.exec((err, result) => {
 			if (err) {
 				return res.status(422).json({ error: err });
@@ -141,7 +141,7 @@ router.put("/delete/comment/:postId", authentication, (req, res) => {
 		},
 		{ new: true }
 	)
-		.populate("user", "_id username")
+		.populate("user", "_id username photo")
 		.populate("comments.user", "_id username")
 		.exec((err, post) => {
 			if (err)

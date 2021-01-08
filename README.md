@@ -1,9 +1,11 @@
 # instagram-clone
+
 #### (an ongoing project, still working on some more functionality of the app)
 
 An attempt to make a clone of Instagram with all the functionality of Instagram (obviously not all 😅) created from scratch using MERN tech stack.
 
-Functionality includes:
+Functionalities included:
+
 ```
 1. signup
 2. login, logout
@@ -21,23 +23,28 @@ To run the app on localhost:
 
 1. Download the zipped folder/ clone the project on your system
 2. Open cmd in the same location
-3. Type 
+3. Type
+
 ```
 cd server
 npm install
-    
+
 cd client
 npm install
 ```
+
 These commands will install all the dependencies required to run the app.
 
 4. to run the app,
-First run your server using
+   First run your server using
+
 ```
 cd server
 npm start
 ```
+
 Then run your client side using
+
 ```
 cd client
 npm start

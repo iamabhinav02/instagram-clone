@@ -133,34 +133,65 @@ const FollowingPosts = () => {
 			{data.map(item => {
 				return (
 					<div className="card home-card" key={item._id}>
-						<h5>
-							<Link
-								to={
-									item.user._id !== state._id
-										? `/profile/${item.user._id}`
-										: `/profile`
-								}
+						<div className="row">
+							<div
+								className="col s1"
+								style={{ paddingTop: "5px" }}
 							>
-								{item.user.username}
-							</Link>
-							{item.user._id === state._id && (
-								<i
-									className="material-icons"
+								<img
 									style={{
-										color: "black",
-										float: "right",
-										cursor: "pointer",
-										margin: "10px",
+										width: "45px",
+										height: "45px",
+										borderRadius: "100%",
 									}}
-									onClick={() => {
-										deletePost(item._id);
+									src={item.user.photo}
+									alt="Photo"
+								/>
+							</div>
+							<div
+								className="col s10"
+								style={{ paddingLeft: "15px" }}
+							>
+								<h6
+									style={{
+										textAlign: "left",
+										fontSize: "24px",
+										fontWeight: "480",
 									}}
 								>
-									delete
-								</i>
-							)}
-						</h5>
-						<span>{item.location}</span>
+									<Link
+										to={
+											item.user._id !== state._id
+												? `/profile/${item.user._id}`
+												: `/profile`
+										}
+									>
+										{item.user.username}
+									</Link>
+								</h6>
+							</div>
+							<div
+								className="col s1"
+								style={{ paddingTop: "15px" }}
+							>
+								{item.user._id === state._id && (
+									<i
+										className="material-icons"
+										style={{
+											color: "black",
+											cursor: "pointer",
+											padding: "auto",
+										}}
+										onClick={() => {
+											deletePost(item._id);
+										}}
+									>
+										delete
+									</i>
+								)}
+							</div>
+						</div>
+						<p style={{ fontWeight: "500" }}>{item.location}</p>
 						<div className="card-image">
 							<img src={item.image} alt={item.caption} />
 						</div>
@@ -213,13 +244,18 @@ const FollowingPosts = () => {
 										}}
 										key={records._id}
 									>
-										<span
+										<Link
+											to={
+												records.user._id !== state._id
+													? `/profile/${records.user._id}`
+													: `/profile`
+											}
 											style={{
 												fontWeight: "500",
 											}}
 										>
 											{records.user.username}
-										</span>{" "}
+										</Link>{" "}
 										<span style={{ float: "right" }}>
 											{records.user._id === state._id && (
 												<i
@@ -228,6 +264,7 @@ const FollowingPosts = () => {
 														color: "black",
 														cursor: "pointer",
 														fontSize: "1.3rem",
+														paddingLeft: "20px",
 													}}
 													onClick={() => {
 														deleteComment(

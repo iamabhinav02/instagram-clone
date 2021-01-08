@@ -16,7 +16,6 @@ import Signup from "./screens/Signup";
 import CreatePost from "./screens/CreatePost";
 import UserProfile from "./screens/UserProfile";
 import FollowingPosts from "./screens/FollowingPosts";
-
 import { initialState, reducer } from "./store/reducer/userReducer";
 
 export const UserContext = createContext();

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import M from "materialize-css";
-// import { isEmail, isStrongPassword } from "validator";
 
 const Signup = () => {
 	const history = useHistory();

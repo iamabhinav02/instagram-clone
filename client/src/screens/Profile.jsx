@@ -46,6 +46,7 @@ const Profile = () => {
 					}),
 				});
 				fetchedPhoto = await fetchedPhoto.json();
+
 				localStorage.setItem(
 					"user",
 					JSON.stringify({
@@ -61,12 +62,14 @@ const Profile = () => {
 				M.toast({
 					html: "Updated photo",
 					classes: "#43a047 green darken-1",
+					displayLength: 2000,
 				});
 			}
 		} catch (err) {
 			M.toast({
 				html: "Could not update photo",
 				classes: "#c62828 red darken-3",
+				displayLength: 2000,
 			});
 		}
 	}, [image]);
@@ -97,24 +100,15 @@ const Profile = () => {
 						src={state ? state.photo : "loading"}
 						alt="Profile"
 					/>
-					<div className="file-field">
-						<div className="btn button-margin">
-							<span>Update</span>
-							<input
-								type="file"
-								onChange={e => {
-									updatePhoto(e.target.files[0]);
-								}}
-							/>
-						</div>
-						<div className="file-path-wrapper input-field">
-							<input
-								className="file-path validate"
-								type="text"
-								placeholder="Upload an image"
-							/>
-						</div>
-					</div>
+					<button className="btn file-field button-margin #00acc1 cyan darken-1">
+						<input
+							type="file"
+							onChange={e => {
+								updatePhoto(e.target.files[0]);
+							}}
+						/>
+						Update photo
+					</button>
 				</div>
 				<div style={{ textAlign: "left", margin: "25px 0px 0px 0px" }}>
 					<h3>{state ? state.name : "Loading..."}</h3>

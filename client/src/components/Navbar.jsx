@@ -19,7 +19,8 @@ const NavBar = () => {
 				</li>,
 				<li key="Logout">
 					<button
-						className="btn #c62828 red darken-3 button-margin"
+						style={{ marginRight: "20px" }}
+						className="btn #e53935 red darken-1 button-margin"
 						onClick={() => {
 							localStorage.clear();
 							dispatch({ type: "CLEAR" });

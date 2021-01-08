@@ -160,14 +160,14 @@ const UserProfile = () => {
 							</div>
 							{showFollow ? (
 								<button
-									className="btn waves-effect waves-light #ef5350 red lighten-1 button-margin"
+									className="btn waves-effect waves-light #00acc1 cyan darken-1 button-margin"
 									onClick={followUser}
 								>
 									Follow
 								</button>
 							) : (
 								<button
-									className="btn waves-effect waves-light #ef5350 red lighten-1 button-margin"
+									className="btn waves-effect waves-light #00acc1 cyan darken-1 button-margin"
 									onClick={unfollowUser}
 								>
 									Unfollow
