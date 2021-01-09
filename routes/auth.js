@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const db = require("../models/connection");
 // const authentication = require("../middleware/authentication");
+const { SECRET } = require("../config/secretkeys");
 
 const router = express.Router();
 
@@ -54,7 +55,7 @@ router.post("/login", async (req, res) => {
 		const user = await db.User.findOne({ username });
 		const result = await user.comparePassword(password);
 		if (result) {
-			const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+			const token = jwt.sign({ _id: user._id }, SECRET);
 			const {
 				_id,
 				name,

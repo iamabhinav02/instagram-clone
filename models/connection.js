@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const { DATABASE } = require("../config/secretkeys");
 
 mongoose
-	.connect(process.env.DATABASE, {
+	.connect(DATABASE, {
 		useUnifiedTopology: true,
 		useNewUrlParser: true,
 		useCreateIndex: true,
