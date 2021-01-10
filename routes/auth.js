@@ -5,15 +5,14 @@ const nodemailer = require("nodemailer");
 const sendgrid = require("nodemailer-sendgrid-transport");
 
 const db = require("../models/connection");
-const { SECRET } = require("../config/secretkeys");
+const { SECRET, EMAIL_API } = require("../config/secretkeys");
 
 const router = express.Router();
 
 const transporter = nodemailer.createTransport(
 	sendgrid({
 		auth: {
-			api_key:
-				"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",
+			api_key: EMAIL_API,
 		},
 	})
 );
@@ -41,12 +40,12 @@ router.post("/signup", async (req, res) => {
 			});
 			const result = await user.save();
 			if (result) {
-				await transporter.sendMail({
-					to: email,
-					from: "no-reply@clone-insta-gram.com",
+				transporter.sendMail({
+					to: user.email,
+					from: "abhi78570@gmail.com",
 					subject: "Signup successful",
 					html:
-						"<h2>Congratulations on being one of the early tester of this version</h2>",
+						"<h2>Congratulations on being one of the early tester of this app</h2>",
 				});
 				return res
 					.status(201)
@@ -110,12 +109,15 @@ router.post("/reset", async (req, res) => {
 				const result = await user.save();
 				if (result) {
 					transporter.sendMail({
-						from: "no-reply@clone-insta-gram.com",
+						from: "abhi78570@gmail.com",
 						to: user.email,
 						subject: "Reset password",
 						html: `<p>Request for password reset</p>
-						<h5>Click on this <a href="http://localhost:3000/reset/${token}">link</a> to reset your password. This link will be active for 1 hour.</h5>`,
+						<h5>Click on this <a href="http://localhost:3001/reset/${token}">link</a> to reset your password. This link will be active for 1 hour.</h5>`,
 					});
+					return res
+						.status(200)
+						.json({ message: "Check your mail for the link" });
 				}
 			}
 		});
@@ -128,10 +130,10 @@ router.post("/newpassword", async (req, res) => {
 	try {
 		const { password, repassword, token } = req.body;
 		if (password === repassword) {
-			const user = await db.User.findOne(
-				{ resetToken: token },
-				{ expiryToken: { $gt: Date.now() } }
-			);
+			const user = await db.User.findOne({
+				resetToken: token,
+				expiryToken: { $gt: Date.now() },
+			});
 			if (!user) throw "Link has expired. Send again!";
 			user.password = password;
 			user.resetToken = undefined;

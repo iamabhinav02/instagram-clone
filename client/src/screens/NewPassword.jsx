@@ -52,7 +52,7 @@ const Reset = () => {
 				<input
 					type="password"
 					placeholder="Re-enter password"
-					value={password}
+					value={repassword}
 					onChange={e => setRepassword(e.target.value)}
 				/>
 				<button

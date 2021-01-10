@@ -11,7 +11,7 @@ app.use(auth);
 app.use(post);
 app.use(user);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static("client/build"));
