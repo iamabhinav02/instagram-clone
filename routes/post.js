@@ -29,7 +29,8 @@ router.get("/posts", authentication, async (req, res) => {
 	try {
 		const posts = await db.Post.find()
 			.populate("user", "_id username photo")
-			.populate("comments.user", "_id username");
+			.populate("comments.user", "_id username")
+			.sort("-created");
 		res.status(200).json({ posts });
 	} catch (error) {
 		res.status(401).json({
@@ -42,7 +43,8 @@ router.get("/getfollowingpost", authentication, async (req, res) => {
 	try {
 		const posts = await db.Post.find({ user: { $in: req.user.following } })
 			.populate("user", "_id username photo")
-			.populate("comments.user", "_id username");
+			.populate("comments.user", "_id username")
+			.sort("-created");
 		res.status(200).json({ posts });
 	} catch (error) {
 		res.status(401).json({

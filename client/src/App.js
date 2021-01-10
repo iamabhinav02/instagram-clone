@@ -16,6 +16,8 @@ import Signup from "./screens/Signup";
 import CreatePost from "./screens/CreatePost";
 import UserProfile from "./screens/UserProfile";
 import FollowingPosts from "./screens/FollowingPosts";
+import Reset from "./screens/Reset";
+import NewPassword from "./screens/NewPassword";
 import { initialState, reducer } from "./store/reducer/userReducer";
 
 export const UserContext = createContext();
@@ -52,6 +54,12 @@ const Routing = () => {
 			</Route>
 			<Route exact path="/signup">
 				<Signup />
+			</Route>
+			<Route exact path="/reset">
+				<Reset />
+			</Route>
+			<Route exact path="/reset/:token">
+				<NewPassword />
 			</Route>
 			<Route exact path="/createpost">
 				<CreatePost />

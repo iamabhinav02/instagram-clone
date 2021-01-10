@@ -1,17 +1,22 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const sendgrid = require("nodemailer-sendgrid-transport");
 
 const db = require("../models/connection");
-// const authentication = require("../middleware/authentication");
 const { SECRET } = require("../config/secretkeys");
 
 const router = express.Router();
 
-// router.get("/protected", authentication, async (req, res) => {
-// 	const { _id } = req.user;
-// 	const user = await db.User.findById(_id);
-// 	res.status(200).json({ _id: user._id, username: user.username });
-// });
+const transporter = nodemailer.createTransport(
+	sendgrid({
+		auth: {
+			api_key:
+				"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",
+		},
+	})
+);
 
 router.post("/signup", async (req, res) => {
 	try {
@@ -35,10 +40,18 @@ router.post("/signup", async (req, res) => {
 				photo,
 			});
 			const result = await user.save();
-			if (result)
+			if (result) {
+				await transporter.sendMail({
+					to: email,
+					from: "no-reply@clone-insta-gram.com",
+					subject: "Signup successful",
+					html:
+						"<h2>Congratulations on being one of the early tester of this version</h2>",
+				});
 				return res
 					.status(201)
 					.json({ message: "You have successfully registered" });
+			}
 		} else {
 			return res.status(422).json({ error: "Passwords do not match" });
 		}
@@ -80,6 +93,58 @@ router.post("/login", async (req, res) => {
 		} else throw Error();
 	} catch (err) {
 		res.status(422).json({ error: "Invalid Email/Password" });
+	}
+});
+
+router.post("/reset", async (req, res) => {
+	try {
+		crypto.randomBytes(32, async (err, buffer) => {
+			if (err) {
+				throw Error("Error. Try again!");
+			} else {
+				const token = buffer.toString("hex");
+				const user = await db.User.findOne({ email: req.body.email });
+				if (!user) throw Error("User with this email does not exist");
+				user.resetToken = token;
+				user.expiryToken = Date.now() + 3600000;
+				const result = await user.save();
+				if (result) {
+					transporter.sendMail({
+						from: "no-reply@clone-insta-gram.com",
+						to: user.email,
+						subject: "Reset password",
+						html: `<p>Request for password reset</p>
+						<h5>Click on this <a href="http://localhost:3000/reset/${token}">link</a> to reset your password. This link will be active for 1 hour.</h5>`,
+					});
+				}
+			}
+		});
+	} catch (err) {
+		return res.status(422).json({ error: err.message });
+	}
+});
+
+router.post("/newpassword", async (req, res) => {
+	try {
+		const { password, repassword, token } = req.body;
+		if (password === repassword) {
+			const user = await db.User.findOne(
+				{ resetToken: token },
+				{ expiryToken: { $gt: Date.now() } }
+			);
+			if (!user) throw "Link has expired. Send again!";
+			user.password = password;
+			user.resetToken = undefined;
+			user.expiryToken = undefined;
+			const result = await user.save();
+			if (result)
+				return res.status(200).json({ message: "Password updated" });
+			else throw Error("Password could not be updated");
+		} else {
+			throw Error("Passwords do not match");
+		}
+	} catch (err) {
+		return res.status(422).json({ error: err.message });
 	}
 });
 

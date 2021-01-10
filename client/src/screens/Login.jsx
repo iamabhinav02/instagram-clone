@@ -67,6 +67,12 @@ const Login = () => {
 				>
 					Login
 				</button>
+				<h6 className="login-label">
+					<Link to="/reset">
+						{" "}
+						<i>Forgot Password?</i>
+					</Link>
+				</h6>
 			</div>
 			<h6 className="login-label">
 				<Link to="/signup">

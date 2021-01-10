@@ -37,6 +37,12 @@ const userSchema = new mongoose.Schema({
 		default:
 			"https://res.cloudinary.com/profhub/image/upload/c_scale,h_180,w_180/v1610009101/no-profile_xd3hfl.png",
 	},
+	resetToken: {
+		type: String,
+	},
+	expiryToken: {
+		type: Date,
+	},
 });
 
 userSchema.pre("save", async function (next) {

@@ -90,7 +90,7 @@ const Signup = () => {
 				/>
 				<input
 					type="email"
-					placeholder="Email"
+					placeholder="Email (Enter valid email)"
 					value={email}
 					onChange={e => setEmail(e.target.value)}
 				/>
