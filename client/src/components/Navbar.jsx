@@ -1,13 +1,31 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../App";
+import M from "materialize-css";
 
 const NavBar = () => {
 	const { state, dispatch } = useContext(UserContext);
 	const history = useHistory();
+	const searchBar = useRef(null);
+	const [Search, setSearch] = useState("");
+	const [UserDetails, setUserDetails] = useState([]);
+
+	useEffect(() => {
+		M.Modal.init(searchBar.current);
+	}, []);
+
 	const RenderList = () => {
 		if (state) {
 			return [
+				<li key="Search">
+					<i
+						data-target="modal1"
+						className="large material-icons modal-trigger"
+						style={{ color: "black", cursor: "pointer" }}
+					>
+						search
+					</i>
+				</li>,
 				<li key="Profile">
 					<Link to="/profile">Profile</Link>
 				</li>,
@@ -43,6 +61,26 @@ const NavBar = () => {
 		}
 	};
 
+	const SearchUser = async query => {
+		try {
+			setSearch(query);
+			let fetched = await fetch("/search", {
+				method: "post",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+				},
+				body: JSON.stringify({
+					query,
+				}),
+			});
+			fetched = await fetched.json();
+			setUserDetails(fetched.user);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	return (
 		<nav>
 			<div className="nav-wrapper white">
@@ -52,6 +90,60 @@ const NavBar = () => {
 				<ul id="nav-mobile" className="right">
 					{RenderList()}
 				</ul>
+			</div>
+			<div className="modal" id="modal1" ref={searchBar}>
+				<div className="modal-content" style={{ color: "black" }}>
+					<input
+						type="text"
+						placeholder="Search users"
+						value={Search}
+						onChange={e => SearchUser(e.target.value)}
+					/>
+					<ul className="collection">
+						{UserDetails.map(user => {
+							return (
+								<Link
+									to={
+										user._id !== state._id
+											? `/profile/${user._id}`
+											: `/profile`
+									}
+									onClick={() => {
+										M.Modal.getInstance(
+											searchBar.current
+										).close();
+										setSearch("");
+										setUserDetails([]);
+									}}
+									key={user._id}
+								>
+									<li className="collection-item avatar">
+										{/* <img
+										src={user.photo}
+										alt="Avatar"
+										className="cirlce"
+									/> */}
+										<span className="title">
+											{user.name}
+										</span>
+										<p>@{user.username}</p>
+									</li>
+								</Link>
+							);
+						})}
+					</ul>
+				</div>
+				<div className="modal-footer">
+					<button
+						className="modal-close waves-effect waves-green btn-flat"
+						onClick={() => {
+							setSearch("");
+							setUserDetails([]);
+						}}
+					>
+						Close
+					</button>
+				</div>
 			</div>
 		</nav>
 	);

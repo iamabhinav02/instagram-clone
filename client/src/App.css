@@ -83,3 +83,7 @@ p {
     height: max-content;
     word-break: break-all;
 }
+
+.collection-item {
+    width: 100%;
+}

@@ -5,14 +5,14 @@ const nodemailer = require("nodemailer");
 const sendgrid = require("nodemailer-sendgrid-transport");
 
 const db = require("../models/connection");
-const { SECRET, EMAIL_API } = require("../config/secretkeys");
+const { SECRET, SENDGRID_API, HOST } = require("../config/secretkeys");
 
 const router = express.Router();
 
 const transporter = nodemailer.createTransport(
 	sendgrid({
 		auth: {
-			api_key: EMAIL_API,
+			api_key: SENDGRID_API,
 		},
 	})
 );
@@ -113,7 +113,7 @@ router.post("/reset", async (req, res) => {
 						to: user.email,
 						subject: "Reset password",
 						html: `<p>Request for password reset</p>
-						<h5>Click on this <a href="http://localhost:3001/reset/${token}">link</a> to reset your password. This link will be active for 1 hour.</h5>`,
+						<h5>Click on this <a href="${HOST}/reset/${token}">link</a> to reset your password. This link will be active for 1 hour.</h5>`,
 					});
 					return res
 						.status(200)

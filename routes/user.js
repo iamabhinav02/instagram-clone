@@ -112,4 +112,17 @@ router.put("/updatephoto", authentication, async (req, res) => {
 	}
 });
 
+router.post("/search", authentication, async (req, res) => {
+	try {
+		const expression = new RegExp("^" + req.body.query);
+		const user = await db.User.find({
+			username: { $regex: expression },
+		}).select("_id username name photo");
+		if (!user) throw Error("No user with this username");
+		return res.status(200).json({ user });
+	} catch (err) {
+		return res.status(422).json({ error: err.message });
+	}
+});
+
 module.exports = router;
