@@ -2,6 +2,8 @@
 
 #### (an ongoing project, still working on updating UI of the app)
 
+Link for the live website - https://clone-insta-gram.herokuapp.com
+
 An attempt to make a clone of Instagram with all the functionality of Instagram (obviously not all 😅) created from scratch using MERN tech stack.
 
 In this project, I covered:
@@ -66,8 +68,6 @@ Then run your client side using
 cd client
 npm start
 ```
-
-Will soon host the running application on any cloud service provider like Herokuapp.
 
 Do let me know how you liked the application 🚀🚀
 
