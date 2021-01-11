@@ -45,82 +45,6 @@ const NavBar = () => {
 					>
 						search
 					</i>
-					<div className="modal" id="modal1" ref={searchBar}>
-						<div
-							className="modal-content"
-							style={{ color: "black" }}
-						>
-							<input
-								type="text"
-								placeholder="Search users"
-								value={Search}
-								onChange={e => SearchUser(e.target.value)}
-							/>
-							<ul className="collection">
-								{UserDetails.map(user => {
-									return (
-										<li
-											className="collection-item avatar"
-											key={user._id}
-										>
-											<Link
-												to={
-													user._id === state._id
-														? `/profile`
-														: `/profile/${user._id}`
-												}
-												onClick={() => {
-													M.Modal.getInstance(
-														searchBar.current
-													).close();
-													setSearch("");
-													setUserDetails([]);
-												}}
-											>
-												<div className="row">
-													<div
-														className="col s1"
-														style={{
-															float: "left",
-														}}
-													>
-														<img
-															style={{
-																width: "45px",
-																height: "45px",
-																borderRadius:
-																	"50%",
-															}}
-															src={user.photo}
-															alt="Avatar"
-															className="cirlce"
-														/>
-													</div>
-													<div className="col s11">
-														<span className="title">
-															{user.name}
-														</span>
-														<p>@{user.username}</p>
-													</div>
-												</div>
-											</Link>
-										</li>
-									);
-								})}
-							</ul>
-						</div>
-						<div className="modal-footer">
-							<button
-								className="modal-close waves-effect waves-green btn-flat"
-								onClick={() => {
-									setSearch("");
-									setUserDetails([]);
-								}}
-							>
-								Close
-							</button>
-						</div>
-					</div>
 				</li>,
 				<li key="Profile">
 					<Link to="/profile">Profile</Link>
@@ -166,6 +90,78 @@ const NavBar = () => {
 				<ul id="nav-mobile" className="right">
 					{RenderList()}
 				</ul>
+			</div>
+			<div className="modal" id="modal1" ref={searchBar}>
+				<div className="modal-content" style={{ color: "black" }}>
+					<input
+						type="text"
+						placeholder="Search users"
+						value={Search}
+						onChange={e => SearchUser(e.target.value)}
+					/>
+					<ul className="collection">
+						{UserDetails.map(user => {
+							return (
+								<li
+									className="collection-item avatar"
+									key={user._id}
+								>
+									<Link
+										to={
+											user._id === state._id
+												? `/profile`
+												: `/profile/${user._id}`
+										}
+										onClick={() => {
+											M.Modal.getInstance(
+												searchBar.current
+											).close();
+											setSearch("");
+											setUserDetails([]);
+										}}
+									>
+										<div className="row">
+											<div
+												className="col s1"
+												style={{
+													float: "left",
+												}}
+											>
+												<img
+													style={{
+														width: "45px",
+														height: "45px",
+														borderRadius: "50%",
+													}}
+													src={user.photo}
+													alt="Avatar"
+													className="cirlce"
+												/>
+											</div>
+											<div className="col s11">
+												<span className="title">
+													{user.name}
+												</span>
+												<p>@{user.username}</p>
+											</div>
+										</div>
+									</Link>
+								</li>
+							);
+						})}
+					</ul>
+				</div>
+				<div className="modal-footer">
+					<button
+						className="modal-close waves-effect waves-green btn-flat"
+						onClick={() => {
+							setSearch("");
+							setUserDetails([]);
+						}}
+					>
+						Close
+					</button>
+				</div>
 			</div>
 		</nav>
 	);
