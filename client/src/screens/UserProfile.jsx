@@ -96,7 +96,7 @@ const UserProfile = () => {
 	};
 
 	return (
-		<>
+		<div>
 			{userProfile ? (
 				<div style={{ maxWidth: "768px", margin: "0px auto" }}>
 					<div
@@ -191,7 +191,7 @@ const UserProfile = () => {
 			) : (
 				<h2>loading...</h2>
 			)}
-		</>
+		</div>
 	);
 };
 
