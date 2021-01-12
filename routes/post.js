@@ -56,10 +56,9 @@ router.get("/getfollowingpost", authentication, async (req, res) => {
 router.get("/userprofile", authentication, async (req, res) => {
 	try {
 		const { _id } = req.user;
-		const posts = await db.Post.find({ user: _id }).populate(
-			"user",
-			"_id username"
-		);
+		const posts = await db.Post.find({ user: _id })
+			.sort("-created")
+			.populate("user", "_id username");
 		res.status(200).json({ posts });
 	} catch (err) {
 		res.status(401).json({ error: "Could not find any post. Try again!!" });

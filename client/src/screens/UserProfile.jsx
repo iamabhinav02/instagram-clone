@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../App";
+import M from "materialize-css";
 
 const UserProfile = () => {
 	const [userProfile, setProfile] = useState(null);
@@ -9,6 +10,11 @@ const UserProfile = () => {
 	const [showFollow, setShowFollow] = useState(
 		state ? !state.following.includes(userId) : true
 	);
+
+	useEffect(() => {
+		var elems = document.querySelectorAll(".materialboxed");
+		M.Materialbox.init(elems);
+	});
 
 	useEffect(async () => {
 		const fetched = await fetch(`/user/${userId}`, {
@@ -175,15 +181,45 @@ const UserProfile = () => {
 							)}
 						</div>
 					</div>
-					<div className="profile-gallery">
+					<div className="gallery">
 						{userProfile.posts.map(item => {
 							return (
-								<img
-									className="profile-gallery-item"
-									src={item.image}
-									alt={item.caption}
-									key={item._id}
-								/>
+								<div className="gallery-item">
+									<img
+										className="gallery-image"
+										src={item.image}
+										alt={item.caption}
+										key={item._id}
+									/>
+									<div className="gallery-item-info">
+										<ul>
+											<li className="gallery-item-likes">
+												<span className="visually-hidden">
+													<i
+														className="material-icons"
+														style={{ color: "red" }}
+													>
+														favorite
+													</i>{" "}
+													{item.likes.length}
+												</span>
+											</li>
+											<li className="gallery-item-comments">
+												<span className="visually-hidden">
+													<i
+														className="material-icons"
+														style={{
+															color: "white",
+														}}
+													>
+														comment
+													</i>{" "}
+													{item.comments.length}
+												</span>
+											</li>
+										</ul>
+									</div>
+								</div>
 							);
 						})}
 					</div>

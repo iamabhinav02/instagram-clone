@@ -162,6 +162,7 @@ const Home = () => {
 										textAlign: "left",
 										fontSize: "24px",
 										fontWeight: "480",
+										paddingLeft: "5px",
 									}}
 								>
 									<Link

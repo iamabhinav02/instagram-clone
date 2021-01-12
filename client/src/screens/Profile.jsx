@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { UserContext } from "../App";
 import M from "materialize-css";
 
@@ -6,6 +6,12 @@ const Profile = () => {
 	const [posts, setPosts] = useState([]);
 	const { state, dispatch } = useContext(UserContext);
 	const [image, setImage] = useState("");
+	const [post, setPost] = useState("");
+
+	useEffect(() => {
+		var elems = document.querySelectorAll(".modal");
+		M.Modal.init(elems);
+	});
 
 	useEffect(async () => {
 		const fetched = await fetch("/userprofile", {
@@ -142,17 +148,72 @@ const Profile = () => {
 					</div>
 				</div>
 			</div>
-			<div className="profile-gallery">
+			<div className="gallery">
 				{posts.map(item => {
 					return (
-						<img
-							className="profile-gallery-item"
-							src={item.image}
-							alt={item.caption}
-							key={item._id}
-						/>
+						<div className="gallery-item">
+							<img
+								className="gallery-image modal-trigger"
+								src={item.image}
+								alt={item.caption}
+								key={item._id}
+								onClick={() => {
+									setPost(item);
+								}}
+								data-target="modal2"
+							/>
+							<div className="gallery-item-info">
+								<ul>
+									<li className="gallery-item-likes">
+										<span className="visually-hidden">
+											<i
+												className="material-icons"
+												style={{ color: "red" }}
+											>
+												favorite
+											</i>{" "}
+											{item.likes.length}
+										</span>
+									</li>
+									<li className="gallery-item-comments">
+										<span className="visually-hidden">
+											<i
+												className="material-icons"
+												style={{ color: "white" }}
+											>
+												comment
+											</i>{" "}
+											{item.comments.length}
+										</span>
+									</li>
+								</ul>
+							</div>
+						</div>
 					);
 				})}
+				<div className="modal" id="modal2">
+					<div className="modal-content">
+						<div className="row">
+							<div className="col s8">
+								<img
+									className="gallery-image"
+									src={post.image}
+									alt={post.caption}
+									key={post._id}
+								/>
+							</div>
+							<div className="col s4"></div>
+						</div>
+					</div>
+					<div className="modal-footer">
+						<button
+							className="modal-close waves-effect waves-green btn-flat"
+							onClick={() => setPost("")}
+						>
+							Close
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

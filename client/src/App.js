@@ -16,7 +16,9 @@ const App = () => {
 			<BrowserRouter>
 				<Fragment>
 					<NavBar />
-					<Routing />
+					<div className="container">
+						<Routing />
+					</div>
 				</Fragment>
 			</BrowserRouter>
 		</UserContext.Provider>

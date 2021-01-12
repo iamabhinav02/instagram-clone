@@ -84,7 +84,7 @@ const NavBar = () => {
 	return (
 		<nav>
 			<div className="nav-wrapper white">
-				<Link to={state ? "/" : "/login"} className="brand-logo">
+				<Link to={state ? "/" : "/login"} className="brand-logo left">
 					Instagram
 				</Link>
 				<ul id="nav-mobile" className="right">
@@ -102,10 +102,7 @@ const NavBar = () => {
 					<ul className="collection">
 						{UserDetails.map(user => {
 							return (
-								<li
-									className="collection-item avatar"
-									key={user._id}
-								>
+								<li className="collection-item" key={user._id}>
 									<Link
 										to={
 											user._id === state._id
@@ -123,9 +120,7 @@ const NavBar = () => {
 										<div className="row">
 											<div
 												className="col s1"
-												style={{
-													float: "left",
-												}}
+												style={{ paddingLeft: "0px" }}
 											>
 												<img
 													style={{
@@ -138,7 +133,10 @@ const NavBar = () => {
 													className="cirlce"
 												/>
 											</div>
-											<div className="col s11">
+											<div
+												className="col s11"
+												style={{ paddingLeft: "20px" }}
+											>
 												<span className="title">
 													{user.name}
 												</span>
