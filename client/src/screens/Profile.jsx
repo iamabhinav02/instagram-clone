@@ -6,12 +6,6 @@ const Profile = () => {
 	const [posts, setPosts] = useState([]);
 	const { state, dispatch } = useContext(UserContext);
 	const [image, setImage] = useState("");
-	const [post, setPost] = useState("");
-
-	useEffect(() => {
-		var elems = document.querySelectorAll(".modal");
-		M.Modal.init(elems);
-	});
 
 	useEffect(async () => {
 		const fetched = await fetch("/userprofile", {
@@ -85,39 +79,47 @@ const Profile = () => {
 	};
 
 	return (
-		<div style={{ maxWidth: "768px", margin: "0px auto" }}>
+		<div
+			style={{ maxWidth: "768px", margin: "0px auto", marginTop: "20px" }}
+		>
 			<div
+				className="row"
 				style={{
-					display: "flex",
-					justifyContent: "space-around",
-					margin: "18px 0px",
-					borderBottom: "1px solid gray",
-					textAlign: "center",
-					padding: "0px 0px 5px 0px",
+					paddingBottom: "10px",
+					borderBottom: "1px solid grey",
 				}}
 			>
-				<div style={{ display: "inline-grid" }}>
+				<div className="col s4" style={{ textAlign: "center" }}>
 					<img
 						style={{
-							width: "180px",
-							height: "180px",
+							height: "120px",
+							width: "120px",
 							borderRadius: "50%",
+							margin: "0 auto",
 						}}
 						src={state ? state.photo : "loading"}
 						alt="Profile"
 					/>
-					<button className="btn file-field button-margin #00acc1 cyan darken-1">
+					<button
+						className="btn-small file-field #00acc1 cyan darken-1"
+						style={{
+							borderRadius: "2em",
+							border: "0.16em solid rgba(255,255,255,0)",
+							margin: "10px auto",
+						}}
+					>
 						<input
 							type="file"
 							onChange={e => {
 								updatePhoto(e.target.files[0]);
 							}}
 						/>
-						Update photo
+						Update Photo
 					</button>
 				</div>
-				<div style={{ textAlign: "left", margin: "25px 0px 0px 0px" }}>
-					<h3>{state ? state.name : "Loading..."}</h3>
+				<div className="col s1"></div>
+				<div className="col s7" style={{ paddingLeft: "10px" }}>
+					<h4>{state ? state.name : "Loading..."}</h4>
 					<h5>
 						<i style={{ color: "black" }}>
 							@{state ? state.username : "Loading..."}
@@ -126,15 +128,15 @@ const Profile = () => {
 					<div
 						style={{
 							display: "flex",
-							justifyContent: "space-between",
-							width: "109%",
+							flexDirection: "row",
+							width: "100%",
 						}}
 					>
-						<h6>
+						<h6 style={{ padding: "0 4px" }}>
 							{posts.length}{" "}
 							{posts.length === 1 ? "post" : "posts"}
 						</h6>
-						<h6>
+						<h6 style={{ padding: "0 4px" }}>
 							{state ? state.followers.length : "0"}{" "}
 							{state
 								? state.followers.length === 1
@@ -142,7 +144,7 @@ const Profile = () => {
 									: "followers"
 								: "followers"}
 						</h6>
-						<h6>
+						<h6 style={{ padding: "0 4px" }}>
 							{state ? state.following.length : "0"} following
 						</h6>
 					</div>
@@ -157,14 +159,13 @@ const Profile = () => {
 								src={item.image}
 								alt={item.caption}
 								key={item._id}
-								onClick={() => {
-									setPost(item);
-								}}
-								data-target="modal2"
 							/>
 							<div className="gallery-item-info">
 								<ul>
-									<li className="gallery-item-likes">
+									<li
+										className="gallery-item-likes"
+										key="likes"
+									>
 										<span className="visually-hidden">
 											<i
 												className="material-icons"
@@ -175,7 +176,10 @@ const Profile = () => {
 											{item.likes.length}
 										</span>
 									</li>
-									<li className="gallery-item-comments">
+									<li
+										className="gallery-item-comments"
+										key="comments"
+									>
 										<span className="visually-hidden">
 											<i
 												className="material-icons"
@@ -191,29 +195,6 @@ const Profile = () => {
 						</div>
 					);
 				})}
-				<div className="modal" id="modal2">
-					<div className="modal-content">
-						<div className="row">
-							<div className="col s8">
-								<img
-									className="gallery-image"
-									src={post.image}
-									alt={post.caption}
-									key={post._id}
-								/>
-							</div>
-							<div className="col s4"></div>
-						</div>
-					</div>
-					<div className="modal-footer">
-						<button
-							className="modal-close waves-effect waves-green btn-flat"
-							onClick={() => setPost("")}
-						>
-							Close
-						</button>
-					</div>
-				</div>
 			</div>
 		</div>
 	);

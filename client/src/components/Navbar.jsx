@@ -246,7 +246,7 @@ const NavBar = () => {
 												<div
 													className="col s11"
 													style={{
-														paddingLeft: "30px",
+														paddingLeft: "40px",
 													}}
 												>
 													<span className="title">

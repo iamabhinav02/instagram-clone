@@ -138,64 +138,52 @@ const Home = () => {
 			{data.map(item => {
 				return (
 					<div className="card home-card" key={item._id}>
-						<div className="row">
-							<div
-								className="col s1"
-								style={{ paddingTop: "5px" }}
+						<div className="custom-row">
+							<img
+								style={{
+									width: "30px",
+									height: "30px",
+									borderRadius: "50%",
+									margin: "10px 10px",
+								}}
+								src={item.user.photo}
+								alt="Photo"
+							/>
+							<h6
+								style={{
+									fontSize: "24px",
+									fontWeight: "480",
+									margin: "auto 0",
+								}}
 							>
-								<img
+								<Link
+									to={
+										item.user._id !== state._id
+											? `/profile/${item.user._id}`
+											: `/profile`
+									}
+								>
+									{item.user.username}
+								</Link>
+							</h6>
+
+							{item.user._id === state._id && (
+								<i
+									className="material-icons"
 									style={{
-										width: "45px",
-										height: "45px",
-										borderRadius: "100%",
+										color: "black",
+										cursor: "pointer",
+										marginLeft: "auto",
+										marginTop: "auto",
+										marginBottom: "auto",
 									}}
-									src={item.user.photo}
-									alt="Photo"
-								/>
-							</div>
-							<div
-								className="col s10"
-								style={{ paddingLeft: "15px" }}
-							>
-								<h6
-									style={{
-										textAlign: "left",
-										fontSize: "24px",
-										fontWeight: "480",
-										paddingLeft: "5px",
+									onClick={() => {
+										deletePost(item._id);
 									}}
 								>
-									<Link
-										to={
-											item.user._id !== state._id
-												? `/profile/${item.user._id}`
-												: `/profile`
-										}
-									>
-										{item.user.username}
-									</Link>
-								</h6>
-							</div>
-							<div
-								className="col s1"
-								style={{ paddingTop: "15px" }}
-							>
-								{item.user._id === state._id && (
-									<i
-										className="material-icons"
-										style={{
-											color: "black",
-											cursor: "pointer",
-											padding: "auto",
-										}}
-										onClick={() => {
-											deletePost(item._id);
-										}}
-									>
-										delete
-									</i>
-								)}
-							</div>
+									delete
+								</i>
+							)}
 						</div>
 						<p style={{ fontWeight: "500" }}>{item.location}</p>
 						<div className="card-image">

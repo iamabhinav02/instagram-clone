@@ -46,6 +46,11 @@ i {
     margin-bottom: 5px !important;
 }
 
+.custom-row {
+    display: flex;
+    flex-direction: row;
+}
+
 p {
     display: block !important;
     margin-block-start: 0em !important;

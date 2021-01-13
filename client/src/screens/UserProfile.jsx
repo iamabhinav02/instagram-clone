@@ -102,36 +102,68 @@ const UserProfile = () => {
 	};
 
 	return (
-		<div>
+		<>
 			{userProfile ? (
-				<div style={{ maxWidth: "768px", margin: "0px auto" }}>
+				<div
+					style={{
+						maxWidth: "768px",
+						margin: "0px auto",
+						marginTop: "20px",
+					}}
+				>
 					<div
+						className="row"
 						style={{
-							display: "flex",
-							justifyContent: "space-around",
-							margin: "18px 0px",
-							borderBottom: "1px solid gray",
-							textAlign: "center",
-							padding: "0px 0px 5px 0px",
+							paddingBottom: "10px",
+							borderBottom: "1px solid grey",
 						}}
 					>
-						<div>
+						<div className="col s4" style={{ textAlign: "center" }}>
 							<img
 								style={{
-									width: "180px",
-									height: "180px",
+									height: "120px",
+									width: "120px",
 									borderRadius: "50%",
+									margin: "0 auto",
 								}}
 								src={userProfile.user.photo}
 								alt="Profile"
 							/>
+							{showFollow ? (
+								<button
+									className="btn-small file-field #00acc1 cyan darken-1"
+									style={{
+										borderRadius: "2em",
+										border:
+											"0.16em solid rgba(255,255,255,0)",
+										margin: "10px auto",
+									}}
+									onClick={followUser}
+								>
+									Follow
+								</button>
+							) : (
+								<button
+									className="btn-small file-field #00acc1 cyan darken-1"
+									style={{
+										borderRadius: "2em",
+										border:
+											"0.16em solid rgba(255,255,255,0)",
+										margin: "10px auto",
+									}}
+									onClick={unfollowUser}
+								>
+									Unfollow
+								</button>
+							)}
 						</div>
-						<div style={{ textAlign: "left" }}>
-							<h3>
+						<div className="col s1"></div>
+						<div className="col s7" style={{ paddingLeft: "10px" }}>
+							<h4>
 								{userProfile.user
 									? userProfile.user.name
 									: "Loading..."}
-							</h3>
+							</h4>
 							<h5>
 								<i style={{ color: "black" }}>
 									@
@@ -143,42 +175,27 @@ const UserProfile = () => {
 							<div
 								style={{
 									display: "flex",
-									justifyContent: "space-between",
-									width: "109%",
+									flexDirection: "row",
+									width: "100%",
 								}}
 							>
-								<h6>
+								<h6 style={{ padding: "0 4px" }}>
 									{userProfile.posts.length}{" "}
 									{userProfile.posts.length === 1
 										? "post"
 										: "posts"}
 								</h6>
-								<h6>
+								<h6 style={{ padding: "0 4px" }}>
 									{userProfile.user.followers.length}{" "}
 									{userProfile.user.followers.length === 1
 										? "follower"
 										: "followers"}
 								</h6>
-								<h6>
+								<h6 style={{ padding: "0 4px" }}>
 									{userProfile.user.following.length}{" "}
 									following
 								</h6>
 							</div>
-							{showFollow ? (
-								<button
-									className="btn waves-effect waves-light #00acc1 cyan darken-1 button-margin"
-									onClick={followUser}
-								>
-									Follow
-								</button>
-							) : (
-								<button
-									className="btn waves-effect waves-light #00acc1 cyan darken-1 button-margin"
-									onClick={unfollowUser}
-								>
-									Unfollow
-								</button>
-							)}
 						</div>
 					</div>
 					<div className="gallery">
@@ -193,7 +210,10 @@ const UserProfile = () => {
 									/>
 									<div className="gallery-item-info">
 										<ul>
-											<li className="gallery-item-likes">
+											<li
+												className="gallery-item-likes"
+												key="likes"
+											>
 												<span className="visually-hidden">
 													<i
 														className="material-icons"
@@ -204,7 +224,10 @@ const UserProfile = () => {
 													{item.likes.length}
 												</span>
 											</li>
-											<li className="gallery-item-comments">
+											<li
+												className="gallery-item-comments"
+												key="comments"
+											>
 												<span className="visually-hidden">
 													<i
 														className="material-icons"
@@ -227,7 +250,7 @@ const UserProfile = () => {
 			) : (
 				<h2>loading...</h2>
 			)}
-		</div>
+		</>
 	);
 };
 
