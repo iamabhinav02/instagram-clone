@@ -45,7 +45,6 @@ To run the app on localhost:
 3. Type
 
 ```
-cd server
 npm install
 
 cd client
@@ -58,7 +57,6 @@ These commands will install all the dependencies required to run the app.
    First run your server using
 
 ```
-cd server
 npm start
 ```
 
