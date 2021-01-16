@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const sendgrid = require("nodemailer-sendgrid-transport");
+const validator = require("validator");
 
 const db = require("../models/connection");
 const { SECRET, SENDGRID_API, HOST } = require("../config/secretkeys");
@@ -20,6 +21,13 @@ const transporter = nodemailer.createTransport(
 router.post("/signup", async (req, res) => {
 	try {
 		const { name, email, password, username, repassword, photo } = req.body;
+		if (!validator.isEmail(email))
+			return res.status(422).json({ error: "Not a valid email" });
+		if (!validator.isStrongPassword(password))
+			return res.status(422).json({
+				error:
+					"Use a strong password. { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }",
+			});
 		const savedUseremail = await db.User.findOne({ email });
 		if (savedUseremail)
 			return res
@@ -102,8 +110,13 @@ router.post("/reset", async (req, res) => {
 				throw Error("Error. Try again!");
 			} else {
 				const token = buffer.toString("hex");
+				if (!validator.isEmail(email))
+					return res.status(422).json({ error: "Not a valid email" });
 				const user = await db.User.findOne({ email: req.body.email });
-				if (!user) throw Error("User with this email does not exist");
+				if (!user)
+					return res
+						.status(404)
+						.json({ error: "User with this email does not exist" });
 				user.resetToken = token;
 				user.expiryToken = Date.now() + 3600000;
 				const result = await user.save();
@@ -129,6 +142,11 @@ router.post("/reset", async (req, res) => {
 router.post("/newpassword", async (req, res) => {
 	try {
 		const { password, repassword, token } = req.body;
+		if (!validator.isStrongPassword(password))
+			return res.status(422).json({
+				error:
+					"Use a strong password. { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }",
+			});
 		if (password === repassword) {
 			const user = await db.User.findOne({
 				resetToken: token,
