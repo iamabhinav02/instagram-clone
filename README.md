@@ -1,7 +1,5 @@
 # instagram-clone
 
-#### (an ongoing project, still working on updating UI of the app)
-
 Link for the live website - https://clone-insta-gram.herokuapp.com
 
 An attempt to make a clone of Instagram with all the functionality of Instagram (obviously not all 😅) created from scratch using MERN tech stack.
